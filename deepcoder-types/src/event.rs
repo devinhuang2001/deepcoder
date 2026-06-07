@@ -1,6 +1,5 @@
 //! 事件类型定义 — 流式引擎事件
 
-use serde::{Deserialize, Serialize};
 use super::{ThreadId, TurnId, tool::ToolCall};
 
 /// 引擎发出的流式事件

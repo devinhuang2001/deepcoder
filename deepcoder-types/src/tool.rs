@@ -4,7 +4,6 @@
 //! 借鉴 Codex CLI 的 ToolExecutor trait + Claude Code 的权限/并发模型。
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 /// 工具向模型暴露的方式
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]

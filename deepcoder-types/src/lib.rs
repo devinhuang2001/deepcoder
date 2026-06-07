@@ -5,7 +5,8 @@ pub mod message;
 pub mod session;
 pub mod event;
 
-use serde::{Deserialize, Serialize};
+pub use message::Message;
+
 use uuid::Uuid;
 
 /// 核心类型别名
