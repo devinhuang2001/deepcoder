@@ -2,6 +2,7 @@
 
 use async_trait::async_trait;
 use reqwest::Client;
+use futures::StreamExt;
 use deepcoder_types::provider::*;
 use deepcoder_error::{DeepCoderResult, DeepCoderError};
 
@@ -18,7 +19,10 @@ pub struct DeepSeekProvider {
 impl DeepSeekProvider {
     pub fn new(api_key: String, model: String, base_url: String) -> Self {
         Self {
-            client: Client::new(),
+            client: Client::builder()
+                .timeout(std::time::Duration::from_secs(30))
+                .build()
+                .expect("Failed to create HTTP client"),
             api_key,
             capabilities: ProviderCapabilities::default(),
             info: ProviderInfo {
@@ -70,6 +74,14 @@ impl ModelProvider for DeepSeekProvider {
             .json(&body)
             .send()
             .await?;
+
+        if !response.status().is_success() {
+            let status = response.status();
+            let body_text = response.text().await.unwrap_or_default();
+            return Err(DeepCoderError::Provider(
+                format!("API error ({}): {}", status, body_text)
+            ));
+        }
 
         Ok(Box::new(DeepSeekStream::new(response)))
     }
@@ -146,8 +158,45 @@ impl DeepSeekStream {
 #[async_trait]
 impl StreamReceiver for DeepSeekStream {
     async fn next_event(&mut self) -> Option<DeepCoderResult<StreamEvent>> {
-        // 简化实现：从 buffer 中读取行
-        // 生产版本应使用完整 SSE 解析器
-        None // placeholder
+        use futures::StreamExt;
+
+        // Read next SSE event from response stream
+        while let Some(chunk) = self.response.chunk().await.transpose() {
+            match chunk {
+                Ok(bytes) => {
+                    let text = String::from_utf8_lossy(&bytes);
+                    self.buffer.push_str(&text);
+
+                    // Process complete lines from buffer
+                    while let Some(newline) = self.buffer.find('\n') {
+                        let line = self.buffer[..newline].trim().to_string();
+                        self.buffer = self.buffer[newline + 1..].to_string();
+
+                        if line.is_empty() {
+                            continue; // empty line = event separator
+                        }
+
+                        let result = self.parse_line(&line);
+                        if result.is_some() {
+                            return result;
+                        }
+                    }
+                }
+                Err(e) => {
+                    return Some(Err(DeepCoderError::Provider(format!("Stream error: {e}"))));
+                }
+            }
+        }
+
+        // Stream ended
+        let remaining = self.buffer.trim().to_string();
+        self.buffer.clear();
+        if !remaining.is_empty() {
+            if let Some(result) = self.parse_line(&remaining) {
+                return Some(result);
+            }
+        }
+
+        None // Stream complete
     }
 }

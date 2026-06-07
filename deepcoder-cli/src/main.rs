@@ -81,8 +81,19 @@ async fn main() -> anyhow::Result<()> {
         }
         Commands::Exec { query } => {
             // 批处理模式
-            let result = deepcoder_engine::run_exec(&config, &query).await?;
-            println!("{}", result);
+            if config.api_key.is_none() {
+                eprintln!("⚠ 未设置 API Key");
+                eprintln!("   请设置 DEEPSEEK_API_KEY 环境变量或在配置文件中指定");
+                eprintln!("   例如: set DEEPSEEK_API_KEY=sk-xxx");
+                std::process::exit(1);
+            }
+            match deepcoder_engine::run_exec(&config, &query).await {
+                Ok(result) => println!("{}", result),
+                Err(e) => {
+                    eprintln!("❌ 请求失败: {e}");
+                    std::process::exit(1);
+                }
+            }
         }
         Commands::McpServer => {
             // MCP 服务器模式
