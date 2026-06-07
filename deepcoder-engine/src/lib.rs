@@ -8,7 +8,7 @@ pub mod turn;
 pub use session::Session;
 pub use turn::run_turn;
 
-use deepcoder_types::DeepCoderResult;
+use deepcoder_error::DeepCoderResult;
 
 /// 批处理执行（简化入口）
 pub async fn run_exec(config: &deepcoder_config::Config, query: &str) -> DeepCoderResult<String> {

@@ -5,9 +5,16 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use tokio::sync::RwLock;
 use deepcoder_types::tool::*;
-use deepcoder_types::DeepCoderResult;
+use deepcoder_error::DeepCoderResult;
 
-use super::traits::{Tool, ToolContext};
+use deepcoder_config::Config;
+use super::traits::Tool;
+
+/// 工具执行上下文
+pub struct ToolContext {
+    pub config: deepcoder_config::Config,
+    pub tool_router: Option<Arc<ToolRouter>>,
+}
 
 /// 工具路由
 pub struct ToolRouter {

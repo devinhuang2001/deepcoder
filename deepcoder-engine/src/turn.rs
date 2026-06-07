@@ -8,7 +8,7 @@ use deepcoder_types::provider::*;
 use deepcoder_types::session::*;
 use deepcoder_types::tool::*;
 use deepcoder_types::event::*;
-use deepcoder_types::DeepCoderResult} as _;
+use deepcoder_error::DeepCoderResult;
 
 use crate::session::Session;
 
@@ -191,7 +191,7 @@ pub async fn run_turn(
 }
 
 /// 创建 Provider 辅助函数
-fn create_provider(config: &deepcoder_config::Config) -> DeepCoderResult<Box<dyn super::ModelProvider>> {
+fn create_provider(config: &deepcoder_config::Config) -> DeepCoderResult<Box<dyn deepcoder_provider::ModelProvider>> {
     let api_key = config.provider.api_key.clone()
         .or_else(|| std::env::var("DEEPSEEK_API_KEY").ok())
         .ok_or_else(|| DeepCoderError::Config("DEEPSEEK_API_KEY 未设置".into()))?;

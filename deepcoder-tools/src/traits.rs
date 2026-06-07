@@ -2,13 +2,7 @@
 
 use async_trait::async_trait;
 use deepcoder_types::tool::*;
-use deepcoder_types::DeepCoderResult;
-
-/// 工具执行上下文
-pub struct ToolContext {
-    pub config: deepcoder_config::Config,
-    pub tool_router: Option<std::sync::Arc<ToolRouter>>,
-}
+use deepcoder_error::DeepCoderResult;
 
 /// 核心 Tool trait
 #[async_trait]

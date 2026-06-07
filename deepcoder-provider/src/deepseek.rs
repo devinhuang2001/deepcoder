@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use reqwest::Client;
 use futures::StreamExt;
 use deepcoder_types::provider::*;
-use deepcoder_types::DeepCoderResult} as _;
+use deepcoder_error::DeepCoderResult;
 
 use super::{ModelProvider, StreamReceiver};
 

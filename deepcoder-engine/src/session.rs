@@ -5,7 +5,7 @@ use tokio::sync::RwLock;
 use uuid::Uuid;
 use deepcoder_types::message::*;
 use deepcoder_types::session::*;
-use deepcoder_types::DeepCoderResult} as _;
+use deepcoder_error::DeepCoderResult;
 
 /// 会话
 pub struct Session {

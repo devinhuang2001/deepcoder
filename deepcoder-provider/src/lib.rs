@@ -3,11 +3,10 @@
 //! 定义 ModelProvider trait 及 DeepSeek V4 实现。
 
 pub mod deepseek;
-pub mod types;
 
 use async_trait::async_trait;
 use deepcoder_types::provider::*;
-use deepcoder_types::DeepCoderResult;
+use deepcoder_error::DeepCoderResult;
 
 /// AI 模型提供者抽象
 #[async_trait]
