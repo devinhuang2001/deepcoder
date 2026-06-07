@@ -1,0 +1,14 @@
+[package]
+name = "deepcoder-persistence"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+chrono.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+toml.workspace = true
+deepcoder-types = { workspace = true }

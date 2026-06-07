@@ -1,0 +1,11 @@
+[package]
+name = "deepcoder-skills"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serde.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+deepcoder-types = { workspace = true }
+deepcoder-config = { workspace = true }

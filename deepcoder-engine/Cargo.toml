@@ -1,0 +1,22 @@
+[package]
+name = "deepcoder-engine"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+futures.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+deepcoder-types = { workspace = true }
+deepcoder-error = { workspace = true }
+deepcoder-provider = { workspace = true }
+deepcoder-tools = { workspace = true }
+deepcoder-config = { workspace = true }
+deepcoder-persistence = { workspace = true }
+deepcoder-extension = { workspace = true }
+deepcoder-skills = { workspace = true }

@@ -1,0 +1,15 @@
+[package]
+name = "deepcoder-mcp"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+rmcp = "0.1"
+deepcoder-types = { workspace = true }
+deepcoder-tools = { workspace = true }
+deepcoder-engine = { workspace = true }

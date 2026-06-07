@@ -1,0 +1,10 @@
+[package]
+name = "deepcoder-sandbox"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serde.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+deepcoder-config = { workspace = true }

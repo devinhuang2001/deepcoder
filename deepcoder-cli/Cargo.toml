@@ -1,0 +1,18 @@
+[package]
+name = "deepcoder-cli"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "deepcoder"
+path = "src/main.rs"
+
+[dependencies]
+clap.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+deepcoder-engine = { workspace = true }
+deepcoder-tui = { workspace = true }
+deepcoder-config = { workspace = true }
+deepcoder-app-server = { workspace = true }

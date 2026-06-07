@@ -1,0 +1,64 @@
+[workspace]
+resolver = "3"
+members = [
+    "deepcoder-types",
+    "deepcoder-error",
+    "deepcoder-config",
+    "deepcoder-provider",
+    "deepcoder-tools",
+    "deepcoder-engine",
+    "deepcoder-sandbox",
+    "deepcoder-cli",
+    "deepcoder-tui",
+    "deepcoder-app-server",
+    "deepcoder-extension",
+    "deepcoder-mcp",
+    "deepcoder-persistence",
+    "deepcoder-skills",
+]
+
+[workspace.dependencies]
+# 外部依赖
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+anyhow = "1"
+thiserror = "2"
+clap = { version = "4", features = ["derive"] }
+ratatui = "0.29"
+reqwest = { version = "0.12", features = ["stream"] }
+futures = "0.3"
+uuid = { version = "1", features = ["v4"] }
+chrono = { version = "0.4", features = ["serde"] }
+dirs = "6"
+toml = "0.8"
+async-trait = "0.1"
+regex = "1"
+glob = "0.3"
+crossterm = "0.28"
+pulldown-cmark = "0.13"
+syntect = "5"
+
+# 内部 crate 依赖
+deepcoder-types = { path = "deepcoder-types" }
+deepcoder-error = { path = "deepcoder-error" }
+deepcoder-config = { path = "deepcoder-config" }
+deepcoder-provider = { path = "deepcoder-provider" }
+deepcoder-tools = { path = "deepcoder-tools" }
+deepcoder-engine = { path = "deepcoder-engine" }
+deepcoder-cli = { path = "deepcoder-cli" }
+deepcoder-tui = { path = "deepcoder-tui" }
+deepcoder-app-server = { path = "deepcoder-app-server" }
+deepcoder-extension = { path = "deepcoder-extension" }
+deepcoder-mcp = { path = "deepcoder-mcp" }
+deepcoder-persistence = { path = "deepcoder-persistence" }
+deepcoder-skills = { path = "deepcoder-skills" }
+deepcoder-sandbox = { path = "deepcoder-sandbox" }
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

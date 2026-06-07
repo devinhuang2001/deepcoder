@@ -1,0 +1,16 @@
+[package]
+name = "deepcoder-tui"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ratatui.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+crossterm = "0.28"
+pulldown-cmark = "0.13"
+syntect = "5"
+deepcoder-types = { workspace = true }
+deepcoder-engine = { workspace = true }
+deepcoder-app-server = { workspace = true }

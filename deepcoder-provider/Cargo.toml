@@ -1,0 +1,16 @@
+[package]
+name = "deepcoder-provider"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+reqwest.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+futures.workspace = true
+deepcoder-types = { workspace = true }
+deepcoder-error = { workspace = true }
+async-trait.workspace = true
