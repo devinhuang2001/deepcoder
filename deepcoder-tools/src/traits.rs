@@ -3,6 +3,7 @@
 use async_trait::async_trait;
 use deepcoder_types::tool::*;
 use deepcoder_error::DeepCoderResult;
+use super::router::ToolContext;
 
 /// 核心 Tool trait
 #[async_trait]

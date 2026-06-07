@@ -1,14 +1,13 @@
 //! 回合循环 — 核心 Agent Loop
 
 use std::sync::Arc;
-use futures::StreamExt;
 use tokio::sync::broadcast;
 use deepcoder_types::message::*;
 use deepcoder_types::provider::*;
 use deepcoder_types::session::*;
 use deepcoder_types::tool::*;
 use deepcoder_types::event::*;
-use deepcoder_error::DeepCoderResult;
+use deepcoder_error::{DeepCoderResult, DeepCoderError};
 
 use crate::session::Session;
 

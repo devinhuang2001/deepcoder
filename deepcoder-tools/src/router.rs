@@ -2,10 +2,9 @@
 
 use std::collections::HashMap;
 use std::sync::Arc;
-use async_trait::async_trait;
 use tokio::sync::RwLock;
 use deepcoder_types::tool::*;
-use deepcoder_error::DeepCoderResult;
+use deepcoder_error::{DeepCoderResult, DeepCoderError};
 
 use deepcoder_config::Config;
 use super::traits::Tool;
