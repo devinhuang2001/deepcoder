@@ -77,7 +77,9 @@ impl ModelProvider for DeepSeekProvider {
 
 /// DeepSeek SSE 流解析
 pub struct DeepSeekStream {
+    #[allow(dead_code)]
     response: reqwest::Response,
+    #[allow(dead_code)]
     buffer: String,
 }
 
@@ -88,6 +90,7 @@ impl DeepSeekStream {
 }
 
 impl DeepSeekStream {
+    #[allow(dead_code)]
     fn parse_line(&mut self, line: &str) -> Option<DeepCoderResult<StreamEvent>> {
         if let Some(data) = line.strip_prefix("data: ") {
             if data == "[DONE]" {
