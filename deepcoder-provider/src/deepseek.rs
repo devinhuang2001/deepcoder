@@ -3,7 +3,7 @@
 use async_trait::async_trait;
 use reqwest::Client;
 use deepcoder_types::provider::*;
-use deepcoder_error::DeepCoderResult;
+use deepcoder_error::{DeepCoderResult, DeepCoderError};
 
 use super::{ModelProvider, StreamReceiver};
 
@@ -44,8 +44,8 @@ impl DeepSeekProvider {
             "stream": request.stream,
         });
 
-        if let Some(tools) = request.tools.as_ref().filter(|t| !t.is_empty()) {
-            body["tools"] = serde_json::to_value(tools).unwrap_or_default();
+        if !request.tools.is_empty() {
+            body["tools"] = serde_json::to_value(&request.tools).unwrap_or_default();
         }
         if let Some(max) = request.max_tokens { body["max_tokens"] = max.into(); }
         if let Some(temp) = request.temperature { body["temperature"] = temp.into(); }
