@@ -2,7 +2,6 @@
 
 use async_trait::async_trait;
 use reqwest::Client;
-use futures::StreamExt;
 use deepcoder_types::provider::*;
 use deepcoder_error::DeepCoderResult;
 
@@ -72,18 +71,20 @@ impl ModelProvider for DeepSeekProvider {
             .send()
             .await?;
 
-        Ok(Box::new(DeepSeekStream {
-            stream: response.bytes_stream().map(|r| r.map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))),
-            buffer: String::new(),
-        }))
+        Ok(Box::new(DeepSeekStream::new(response)))
     }
 }
 
 /// DeepSeek SSE 流解析
 pub struct DeepSeekStream {
-    stream: futures::stream::Map<reqwest::Bytes, ...>,
-    // 简化的流式解析器
+    response: reqwest::Response,
     buffer: String,
+}
+
+impl DeepSeekStream {
+    pub fn new(response: reqwest::Response) -> Self {
+        Self { response, buffer: String::new() }
+    }
 }
 
 impl DeepSeekStream {

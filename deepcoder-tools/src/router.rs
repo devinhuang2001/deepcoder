@@ -11,7 +11,7 @@ use super::traits::Tool;
 
 /// 工具执行上下文
 pub struct ToolContext {
-    pub config: deepcoder_config::Config,
+    pub config: Config,
     pub tool_router: Option<Arc<ToolRouter>>,
 }
 
