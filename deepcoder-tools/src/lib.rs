@@ -6,4 +6,4 @@ pub mod router;
 pub mod traits;
 
 pub use traits::Tool;
-pub use router::ToolRouter;
+pub use router::{ToolRouter, ToolContext};

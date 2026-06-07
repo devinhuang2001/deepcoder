@@ -5,7 +5,6 @@
 pub mod jsonl;
 pub mod index;
 
-use anyhow::Result;
 use std::path::PathBuf;
 
 /// 持久化管理器

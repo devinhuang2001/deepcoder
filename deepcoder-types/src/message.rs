@@ -10,6 +10,7 @@ pub enum MessageRole {
     User,
     Assistant,
     Tool,
+    Reasoning,
 }
 
 /// 消息内容类型

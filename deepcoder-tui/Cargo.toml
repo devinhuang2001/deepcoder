@@ -13,4 +13,6 @@ pulldown-cmark = "0.13"
 syntect = "5"
 deepcoder-types = { workspace = true }
 deepcoder-engine = { workspace = true }
+deepcoder-tools = { workspace = true }
+deepcoder-config = { workspace = true }
 deepcoder-app-server = { workspace = true }

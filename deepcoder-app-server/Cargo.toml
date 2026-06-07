@@ -13,3 +13,4 @@ futures.workspace = true
 uuid.workspace = true
 deepcoder-types = { workspace = true }
 deepcoder-engine = { workspace = true }
+deepcoder-config = { workspace = true }

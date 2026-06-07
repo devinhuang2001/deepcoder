@@ -34,7 +34,7 @@ pub async fn run_turn(
     let _ = event_tx.send(EngineEvent::TurnStart { thread_id, turn_id });
 
     // 3. 构建 Provider 请求
-    let provider = super::create_provider(&session.config)?;
+    let provider = create_provider(&session.config)?;
     let tool_specs = session.tool_router.direct_specs().await;
 
     let chat_messages: Vec<ChatMessage> = session.messages.iter()
@@ -83,16 +83,18 @@ pub async fn run_turn(
                     let _ = event_tx.send(EngineEvent::ReasoningDelta { thread_id, content: text });
                 }
                 StreamEvent::ToolCall { id, name, arguments } => {
-                    tool_calls.push(ToolCall { call_id: id, tool_name: name, arguments });
+                    let tc = ToolCall { call_id: id.clone(), tool_name: name.clone(), arguments: arguments.clone() };
+                    tool_calls.push(tc);
                     let _ = event_tx.send(EngineEvent::ToolCallRequested {
                         thread_id,
-                        tool_call: ToolCall { call_id: id.clone(), tool_name: name.clone(), arguments: arguments.clone() },
+                        tool_call: ToolCall { call_id: id, tool_name: name, arguments },
                     });
                 }
                 StreamEvent::Done => break,
                 StreamEvent::Error(e) => {
+                    let err_msg = e.clone();
                     let _ = event_tx.send(EngineEvent::Error { thread_id, message: e });
-                    return Err(DeepCoderError::Provider(e));
+                    return Err(DeepCoderError::Provider(err_msg));
                 }
             }
         }
@@ -191,7 +193,7 @@ pub async fn run_turn(
 
 /// 创建 Provider 辅助函数
 fn create_provider(config: &deepcoder_config::Config) -> DeepCoderResult<Box<dyn deepcoder_provider::ModelProvider>> {
-    let api_key = config.provider.api_key.clone()
+    let api_key = config.api_key.clone()
         .or_else(|| std::env::var("DEEPSEEK_API_KEY").ok())
         .ok_or_else(|| DeepCoderError::Config("DEEPSEEK_API_KEY 未设置".into()))?;
 

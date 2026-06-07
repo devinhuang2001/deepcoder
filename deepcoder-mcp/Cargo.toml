@@ -13,3 +13,4 @@ rmcp = "0.1"
 deepcoder-types = { workspace = true }
 deepcoder-tools = { workspace = true }
 deepcoder-engine = { workspace = true }
+deepcoder-config = { workspace = true }

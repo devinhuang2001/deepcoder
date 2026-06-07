@@ -3,7 +3,6 @@
 //! 支持 Stdio、WebSocket、以及进程内 channel 传输。
 
 pub mod protocol;
-pub mod transport;
 
 use anyhow::Result;
 

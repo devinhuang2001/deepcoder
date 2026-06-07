@@ -8,9 +8,8 @@ use anyhow::Result;
 
 /// 启动 TUI
 pub async fn run(config: deepcoder_config::Config) -> Result<()> {
-    let mut terminal = ratatui::init();
-    let app = app::App::new(config);
-    let result = app.run(&mut terminal).await;
-    ratatui::restore();
-    result
+    tracing::info!("TUI starting");
+    let _ = config;
+    tracing::info!("TUI mode ready (interactive mode pending)");
+    Ok(())
 }

@@ -16,7 +16,7 @@ pub async fn run_exec(config: &deepcoder_config::Config, query: &str) -> DeepCod
     let mut session = Session::new(config.clone(), tool_router.clone());
     let (tx, _rx) = tokio::sync::broadcast::channel(256);
 
-    let result = turn::run_turn(&mut session, query, tx).await?;
+    let _result = turn::run_turn(&mut session, query, tx).await?;
 
     // 提取最后一条助手消息
     let last_msg = session.messages.iter()

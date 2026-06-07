@@ -83,8 +83,7 @@ pub trait PromptContributor: Send + Sync {
 }
 
 /// 回合生命周期钩子
-#[async_trait::async_trait]
 pub trait TurnHook: Send + Sync {
-    async fn on_turn_start(&self) {}
-    async fn on_turn_end(&self) {}
+    fn on_turn_start(&self) {}
+    fn on_turn_end(&self) {}
 }

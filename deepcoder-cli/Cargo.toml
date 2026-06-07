@@ -11,8 +11,10 @@ path = "src/main.rs"
 clap.workspace = true
 tokio.workspace = true
 tracing.workspace = true
+tracing-subscriber.workspace = true
 anyhow.workspace = true
 deepcoder-engine = { workspace = true }
 deepcoder-tui = { workspace = true }
 deepcoder-config = { workspace = true }
 deepcoder-app-server = { workspace = true }
+deepcoder-mcp = { workspace = true }

@@ -69,7 +69,7 @@ async fn main() -> anyhow::Result<()> {
         config_builder.provider.model = model;
     }
     if let Some(key) = cli.api_key {
-        config_builder.provider.api_key = Some(key);
+        config_builder.api_key = Some(key);
     }
 
     let config = config_builder;
