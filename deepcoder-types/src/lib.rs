@@ -3,6 +3,7 @@
 pub mod tool;
 pub mod message;
 pub mod session;
+pub mod provider;
 pub mod event;
 
 pub use message::Message;
