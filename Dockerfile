@@ -35,7 +35,6 @@ RUN caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile \
 
 ENV PORT=10000 \
     DEEPCODER_ENV=production \
-    DEEPCODER_REQUIRE_AUTH=true \
     DEEPCODER_DATA_DIR=/var/data/deepcoder \
     DEEPCODER_WORKSPACE_DIR=/var/data/workspace \
     RUST_LOG=info

@@ -34,7 +34,7 @@ jobs:
         working-directory: deepcoder
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
@@ -46,7 +46,7 @@ jobs:
       - name: Build Windows desktop binary
         if: matrix.os == 'windows-latest'
         run: cargo build --release -p deepcoder-desktop --target ${{ matrix.target }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: matrix.os == 'windows-latest'
         with:
           node-version: 22

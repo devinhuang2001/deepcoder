@@ -21,7 +21,7 @@ impl DesktopApp {
         let mut visuals = egui::Visuals::dark();
         visuals.window_rounding = egui::Rounding::same(12.0);
         visuals.window_fill = egui::Color32::from_rgba_premultiplied(30, 30, 30, 240);
-        visuals.window_stroke = egui::Stroke::new(1.0, egui::Color32::from_white_alpha(20));
+        visuals.window_stroke = egui::Stroke::new(1.0_f32, egui::Color32::from_white_alpha(20));
         visuals.panel_fill = egui::Color32::from_rgb(30, 30, 32);
         visuals.widgets.noninteractive.bg_fill = egui::Color32::from_rgb(44, 44, 46);
         visuals.widgets.noninteractive.rounding = egui::Rounding::same(8.0);
@@ -32,7 +32,8 @@ impl DesktopApp {
         visuals.widgets.active.bg_fill = egui::Color32::from_rgb(10, 132, 255);
         visuals.widgets.active.rounding = egui::Rounding::same(8.0);
         visuals.selection.bg_fill = egui::Color32::from_rgb(10, 132, 255);
-        visuals.selection.stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(10, 132, 255));
+        visuals.selection.stroke =
+            egui::Stroke::new(1.0_f32, egui::Color32::from_rgb(10, 132, 255));
 
         let mut style = (*cc.egui_ctx.style()).clone();
         style.spacing.item_spacing = egui::vec2(10.0, 10.0);
