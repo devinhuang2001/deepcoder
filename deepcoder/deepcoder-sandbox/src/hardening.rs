@@ -13,9 +13,7 @@ pub unsafe fn apply_hardening() {
     #[cfg(target_os = "linux")]
     {
         // 禁用 core dump
-        if let Ok(rc) = std::fs::write("/proc/self/core_limit", "0") {
-            let _ = rc;
-        }
+        let _ = std::fs::write("/proc/self/core_limit", "0");
         // 清除危险的动态链接环境变量
         for var in &["LD_PRELOAD", "LD_LIBRARY_PATH", "LD_AUDIT", "LD_DEBUG"] {
             // SAFETY: 该函数的调用契约要求此时尚未创建其他线程。

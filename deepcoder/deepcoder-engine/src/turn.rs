@@ -725,26 +725,13 @@ Always run cargo fmt.
 
     #[tokio::test]
     async fn tool_loop_sends_tool_result_back_to_provider() {
-        let dir = std::env::current_dir()
-            .unwrap()
-            .join("target")
-            .join(format!(
-                "deepcoder_engine_tool_loop_file_{}",
-                std::process::id()
-            ));
-        if dir.exists() {
-            std::fs::remove_dir_all(&dir).ok();
-        }
-        std::fs::create_dir_all(&dir).unwrap();
-        let file = dir.join("note.txt");
-        std::fs::write(&file, "tool output").unwrap();
-
         let config = test_config("tool_loop");
         let data_dir = config.system.data_dir.clone();
-        let router = std::sync::Arc::new(deepcoder_tools::ToolRouter::with_builtins());
+        let router = Arc::new(ToolRouter::new());
+        router.register(Arc::new(FixedOutputTool)).await;
         let mut session = Session::new(config, router);
         let session_id = session.id;
-        let provider = MockProvider::new(file.display().to_string());
+        let provider = MockProvider::new("ignored".into());
         let (tx, _rx) = broadcast::channel(32);
 
         run_turn_with_provider(&mut session, "read the file", tx, &provider)
@@ -784,6 +771,36 @@ Always run cargo fmt.
                 .iter()
                 .any(|event_type| event_type == "tool_result")
         );
+    }
+
+    struct FixedOutputTool;
+
+    #[async_trait::async_trait]
+    impl Tool for FixedOutputTool {
+        fn name(&self) -> &'static str {
+            "read_file"
+        }
+
+        fn spec(&self) -> ToolSpec {
+            ToolSpec {
+                name: self.name().into(),
+                description: "Return deterministic output for the engine loop test.".into(),
+                input_schema: serde_json::json!({
+                    "type": "object",
+                    "properties": {"path": {"type": "string"}}
+                }),
+            }
+        }
+
+        async fn call(
+            &self,
+            _params: serde_json::Value,
+            _ctx: &ToolContext,
+        ) -> DeepCoderResult<JsonToolOutput> {
+            Ok(JsonToolOutput::success(serde_json::json!({
+                "content": "tool output"
+            })))
+        }
     }
 
     #[tokio::test]
