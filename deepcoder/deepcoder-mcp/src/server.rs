@@ -169,24 +169,21 @@ fn tool_result(data: Value, is_error: bool) -> Value {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::path::PathBuf;
+    use deepcoder_error::DeepCoderResult;
+    use deepcoder_tools::{Tool, ToolContext};
+    use deepcoder_types::tool::{JsonToolOutput, ToolSpec};
 
     fn server() -> McpServer {
         McpServer::new(deepcoder_config::Config::load_default().unwrap())
     }
 
-    fn temp_file() -> PathBuf {
-        let dir = std::env::current_dir()
-            .unwrap()
-            .join("target")
-            .join(format!("deepcoder_mcp_test_{}", std::process::id()));
-        if dir.exists() {
-            std::fs::remove_dir_all(&dir).ok();
+    async fn server_with_fixed_output() -> McpServer {
+        let router = Arc::new(ToolRouter::new());
+        router.register(Arc::new(FixedOutputTool)).await;
+        McpServer {
+            config: deepcoder_config::Config::load_default().unwrap(),
+            router,
         }
-        std::fs::create_dir_all(&dir).unwrap();
-        let file = dir.join("note.txt");
-        std::fs::write(&file, "hello mcp").unwrap();
-        file
     }
 
     #[tokio::test]
@@ -207,20 +204,20 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn tools_call_executes_builtin_tool() {
-        let file = temp_file();
+    async fn tools_call_executes_registered_tool() {
         let request = serde_json::json!({
             "jsonrpc": "2.0",
             "id": 1,
             "method": "tools/call",
             "params": {
-                "name": "read_file",
-                "arguments": {
-                    "path": file.display().to_string()
-                }
+                "name": "fixed_output",
+                "arguments": {}
             }
         });
-        let response = server().process_json(&request.to_string()).await;
+        let response = server_with_fixed_output()
+            .await
+            .process_json(&request.to_string())
+            .await;
         assert_eq!(response["result"]["isError"], false);
         assert!(
             response["result"]["content"][0]["text"]
@@ -228,6 +225,31 @@ mod tests {
                 .unwrap()
                 .contains("hello mcp")
         );
+    }
+
+    struct FixedOutputTool;
+
+    #[async_trait::async_trait]
+    impl Tool for FixedOutputTool {
+        fn name(&self) -> &'static str {
+            "fixed_output"
+        }
+
+        fn spec(&self) -> ToolSpec {
+            ToolSpec {
+                name: self.name().into(),
+                description: "Return deterministic output for MCP protocol tests.".into(),
+                input_schema: serde_json::json!({"type": "object"}),
+            }
+        }
+
+        async fn call(
+            &self,
+            _params: Value,
+            _ctx: &ToolContext,
+        ) -> DeepCoderResult<JsonToolOutput> {
+            Ok(JsonToolOutput::text("hello mcp"))
+        }
     }
 
     #[tokio::test]
