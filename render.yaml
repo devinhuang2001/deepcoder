@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: deepcoder-devinhuang2001
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    maxShutdownDelaySeconds: 30
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: DEEPCODER_ENV
+        value: production
+      - key: DEEPCODER_REQUIRE_AUTH
+        value: "true"
+      - key: DEEPCODER_ACCESS_TOKEN
+        sync: false
+      - key: DEEPCODER_ALLOWED_ORIGINS
+        value: https://deepcoder-devinhuang2001.onrender.com
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: DEEPCODER_DATA_DIR
+        value: /var/data/deepcoder
+      - key: DEEPCODER_WORKSPACE_DIR
+        value: /var/data/workspace
+      - key: RUST_LOG
+        value: info
+    disk:
+      name: deepcoder-data
+      mountPath: /var/data
+      sizeGB: 10
