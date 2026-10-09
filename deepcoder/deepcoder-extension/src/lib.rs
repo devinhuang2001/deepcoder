@@ -184,6 +184,8 @@ pub trait PromptContributor: Send + Sync {
 }
 
 /// 回合生命周期钩子
+// async_trait 生成的方法已经带了 #[must_use]，clippy 1.99 会把这当成重复标注。
+#[allow(unknown_lints, clippy::double_must_use)]
 #[async_trait::async_trait]
 pub trait TurnHook: Send + Sync {
     async fn on_turn_start(&self) {}
