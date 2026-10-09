@@ -17,6 +17,8 @@ pub struct McpTool {
     pub input_schema: Value,
 }
 
+// async_trait 生成的方法已经带了 #[must_use]，clippy 1.99 会把这当成重复标注。
+#[allow(unknown_lints, clippy::double_must_use)]
 #[async_trait]
 pub trait McpTransport: Send + Sync {
     async fn request(&self, method: &str, params: Value) -> DeepCoderResult<Value>;
