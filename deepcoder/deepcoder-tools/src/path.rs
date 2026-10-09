@@ -37,6 +37,13 @@ pub(crate) fn resolve_workspace_path(
     let tail = normalized
         .strip_prefix(&existing_ancestor)
         .unwrap_or_else(|_| Path::new(""));
+    // If the target itself already exists, `nearest_existing_ancestor` returns it
+    // and the tail is empty. Joining an empty path appends a separator, which turns
+    // a file path like `<dir>/note.txt` into `<dir>/note.txt/`; every later fs call
+    // on it then fails with `NotADirectory`.
+    if tail.as_os_str().is_empty() {
+        return Ok(canonical_ancestor);
+    }
     Ok(canonical_ancestor.join(tail))
 }
 
