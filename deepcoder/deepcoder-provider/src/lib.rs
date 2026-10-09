@@ -10,6 +10,8 @@ use deepcoder_error::DeepCoderResult;
 use deepcoder_types::provider::*;
 
 /// AI 模型提供者抽象
+// async_trait 生成的方法已经带了 #[must_use]，clippy 1.99 会把这当成重复标注。
+#[allow(unknown_lints, clippy::double_must_use)]
 #[async_trait]
 pub trait ModelProvider: Send + Sync {
     /// 返回 Provider 信息
@@ -23,6 +25,8 @@ pub trait ModelProvider: Send + Sync {
 }
 
 /// 流式响应接收器
+// async_trait 生成的方法已经带了 #[must_use]，clippy 1.99 会把这当成重复标注。
+#[allow(unknown_lints, clippy::double_must_use)]
 #[async_trait]
 pub trait StreamReceiver: Send {
     /// 接收下一个事件。返回 None 表示流结束。
