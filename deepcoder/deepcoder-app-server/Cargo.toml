@@ -1,0 +1,20 @@
+[package]
+name = "deepcoder-app-server"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+futures.workspace = true
+uuid.workspace = true
+tokio-tungstenite.workspace = true
+url.workspace = true
+deepcoder-types = { workspace = true }
+deepcoder-engine = { workspace = true }
+deepcoder-config = { workspace = true }
+deepcoder-persistence = { workspace = true }
+deepcoder-tools = { workspace = true }

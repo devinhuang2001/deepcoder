@@ -1,0 +1,96 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: release (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            archive: tar.gz
+            bin: deepcoder
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            archive: tar.gz
+            bin: deepcoder
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            archive: zip
+            bin: deepcoder.exe
+
+    defaults:
+      run:
+        working-directory: deepcoder
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: deepcoder
+      - name: Build release binary
+        run: cargo build --release -p deepcoder-cli --target ${{ matrix.target }}
+      - name: Build Windows desktop binary
+        if: matrix.os == 'windows-latest'
+        run: cargo build --release -p deepcoder-desktop --target ${{ matrix.target }}
+      - uses: actions/setup-node@v6
+        if: matrix.os == 'windows-latest'
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: deepcoder-web/package-lock.json
+      - name: Build production web assets
+        if: matrix.os == 'windows-latest'
+        working-directory: deepcoder-web
+        shell: pwsh
+        run: |
+          npm ci
+          npm test
+          npm run build
+      - name: Package Unix
+        if: matrix.archive == 'tar.gz'
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          name="deepcoder-${version}-${{ matrix.target }}"
+          mkdir -p "dist/${name}"
+          cp "target/${{ matrix.target }}/release/${{ matrix.bin }}" "dist/${name}/"
+          cp ../README.md ../BUILD.md ../REFERENCE_SOURCES.md "dist/${name}/"
+          tar -czf "dist/${name}.tar.gz" -C dist "${name}"
+          shasum -a 256 "dist/${name}.tar.gz" > "dist/${name}.tar.gz.sha256"
+      - name: Package Windows
+        if: matrix.archive == 'zip'
+        shell: pwsh
+        run: |
+          $version = $env:GITHUB_REF_NAME.TrimStart('v')
+          $name = "deepcoder-$version-${{ matrix.target }}"
+          New-Item -ItemType Directory -Force -Path "dist/$name" | Out-Null
+          Copy-Item "target/${{ matrix.target }}/release/${{ matrix.bin }}" "dist/$name/"
+          Copy-Item "target/${{ matrix.target }}/release/deepcoder-desktop.exe" "dist/$name/DeepCoder桌面版.exe"
+          Copy-Item "../启动DeepCoder.bat","../启动DeepCoder.ps1","../StartDeepCoder.ps1","../构建桌面版.ps1" "dist/$name/"
+          Copy-Item "../启动DeepCoder网页版.bat","../启动DeepCoder网页版.ps1","../StartDeepCoderWeb.ps1" "dist/$name/"
+          New-Item -ItemType Directory -Force -Path "dist/$name/deepcoder-web" | Out-Null
+          Copy-Item "../deepcoder-web/index.html","../deepcoder-web/package.json","../deepcoder-web/package-lock.json","../deepcoder-web/postcss.config.js","../deepcoder-web/tailwind.config.js","../deepcoder-web/vite.config.js" "dist/$name/deepcoder-web/"
+          Copy-Item "../deepcoder-web/src" "dist/$name/deepcoder-web/src" -Recurse
+          Copy-Item "../deepcoder-web/dist" "dist/$name/deepcoder-web/dist" -Recurse
+          Copy-Item "../README.md","../BUILD.md","../REFERENCE_SOURCES.md" "dist/$name/"
+          Compress-Archive -Path "dist/$name/*" -DestinationPath "dist/$name.zip"
+          $hash = (Get-FileHash "dist/$name.zip" -Algorithm SHA256).Hash.ToLower()
+          "$hash  $name.zip" | Set-Content "dist/$name.zip.sha256"
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            deepcoder/dist/*

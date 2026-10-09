@@ -1,0 +1,14 @@
+.git
+.github
+.deepcoder
+deepcoder/target
+deepcoder-web/node_modules
+deepcoder-web/dist
+logs
+output
+*.exe
+*.log
+.env
+.env.*
+Dockerfile*
+!Dockerfile

@@ -1,4 +1,24 @@
-/target
-**/*.rs.bk
-Cargo.lock
-*.exe
+# Rust build output
+/deepcoder/target/
+
+# Web dependencies and build output
+/deepcoder-web/node_modules/
+/deepcoder-web/dist/
+
+# Local binaries produced by one-click scripts
+/deepcoder.exe
+/DeepCoder*.exe
+
+# Local configuration and runtime data
+/.deepcoder/
+/output/
+*.log
+.env
+.env.*
+!.env.example
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
