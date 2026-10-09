@@ -15,6 +15,8 @@ pub struct ToolApprovalRequest {
 }
 
 /// 交互式审批入口。
+// async_trait 生成的方法已经带了 #[must_use]，clippy 1.99 会把这当成重复标注。
+#[allow(unknown_lints, clippy::double_must_use)]
 #[async_trait]
 pub trait ToolApprover: Send + Sync {
     async fn approve(&self, request: ToolApprovalRequest) -> bool;
@@ -30,6 +32,8 @@ pub struct ToolContext {
 }
 
 /// 核心 Tool trait
+// async_trait 生成的方法已经带了 #[must_use]，clippy 1.99 会把这当成重复标注。
+#[allow(unknown_lints, clippy::double_must_use)]
 #[async_trait]
 pub trait Tool: Send + Sync {
     /// 工具唯一名称
